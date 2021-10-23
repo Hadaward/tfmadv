@@ -1,0 +1,23 @@
+{
+  "name": "com.github.hadaward.tfmadv",
+  "version": "2.0.0",
+  "description": "Standalone for TFMA that promises to fix game bugs",
+  "main": "application.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "homepage": "https://github.com/Hadaward/tfmadv",
+  "repository": {
+    "type": "git",
+    "url": "tfmadv"
+  },
+  "author": "Hadaward",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^15.3.0"
+  },
+  "dependencies": {
+    "portscanner": "^2.2.0",
+    "request": "^2.88.2"
+  }
+}
