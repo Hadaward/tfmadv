@@ -1,6 +1,1 @@
-{
-	"host": {
-		"address": "127.0.0.1",
-		"port": 7567
-	}
-}
+{"host":{"address":"127.0.0.1","port":7567},"debugMode":false}

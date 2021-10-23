@@ -1,6 +1,6 @@
 !(function() {
 	// external library
-	const {app, BrowserWindow, session} = require('electron');
+	const {app, BrowserWindow, session, ipcMain} = require('electron');
 	
 	const fs = require('fs');
 	
@@ -28,12 +28,17 @@
 			width: 1240,
 			height: 660,
 			webPreferences: {
-				contextIsolation: true
+				contextIsolation: true,
+				preload: path.join(__dirname, "ressources/standaloneMenu.js")
 			},
 			icon: path.join(__dirname, "ressources/souris."+(process.platform==='win32'&&'ico'||'png'))
 		});
 		
 		this.window.removeMenu();
+		
+		this.window.webContents.on('did-finish-load', () => {
+			this.window.webContents.send('options', 'debugMode', this.settings.debugMode);
+		});
 		
 		this.init_host();
 	}
@@ -51,6 +56,8 @@
 				
 				request: (filename, request, response) => 
 				{
+					this.window.webContents.send('loading', filename);
+					
 					if (filename.startsWith('/ressources')) {
 						const mimetype = http.mimeTypes[path.extname(filename).toLowerCase()] || "application/octet-stream";
 						let is_localfile = false;
@@ -119,6 +126,11 @@
 			length = String(new_body.length + 15);
 		}
 		
+		// set debug mode
+		if (this.settings.debugMode && filename.endsWith('TFMAdventure.js')) {
+			new_body = body.replace('TFMAdventure.DEBUG = false;', 'TFMAdventure.DEBUG = true; ').replace('if (this.autorisationJoueur.estAdmin || TFMAdventure.DEBUG) {\n                Chips_1.Chips.afficher();\n            }', ' '.repeat(119)).replace('if (TFMAdventure.DEBUG) {\n                InterfaceOptionDebug_1.InterfaceOptionDebug.afficher();\n            }', ' '.repeat(109));
+		}
+		
 		if (new_body) {
 			return {
 				body: new_body,
@@ -126,6 +138,20 @@
 			}
 		}
 	}
+	
+	ipcMain.on('options', (event, name, value) => {
+		if (name === 'debugMode') {
+			this.settings.debugMode = value;
+			fs.writeFileSync(path.join(__dirname, 'ressources\\settings.json'), JSON.stringify(this.settings));
+			session.defaultSession.clearCache();
+			this.window.webContents.reload();
+		} else if (name === 'reload') {
+			this.window.webContents.reload();
+		} else if (name === 'clear-cache') {
+			session.defaultSession.clearCache();
+			this.window.webContents.reload();
+		}
+	})
 	
 	app.whenReady().then(this.create_window);
 })();
