@@ -1,0 +1,28 @@
+{
+  "name": "TransformiceAdventures",
+  "version": "2.0.0",
+  "description": "Standalone for TFMA that promises to fix game bugs",
+  "main": "application.js",
+  "scripts": {
+    "start": "electron .",
+    "dist_win64": "electron-packager . TransformiceAdventures --platform=win32 --arch=x64 --icon=ressources/souris.ico --out ../tfmadv_dist/",
+	"dist_win32": "electron-packager . TransformiceAdventures --platform=win32 --arch=ia32 --icon=ressources/souris.ico --out ../tfmadv_dist/",
+	"dist_linux64": "electron-packager . TransformiceAdventures --platform=linux --arch=x64 --icon=ressources/souris.png --out ../tfmadv_dist/",
+	"dist_linux32": "electron-packager . TransformiceAdventures --platform=linux --arch=ia32 --icon=ressources/souris.png --out ../tfmadv_dist/"
+  },
+  "homepage": "https://github.com/Hadaward/tfmadv",
+  "repository": {
+    "type": "git",
+    "url": "tfmadv"
+  },
+  "author": "Hadaward",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^15.3.0",
+    "electron-wix-msi": "^3.2.0"
+  },
+  "dependencies": {
+    "portscanner": "^2.2.0",
+    "request": "^2.88.2"
+  }
+}
